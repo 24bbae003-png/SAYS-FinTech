@@ -1,0 +1,184 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Registered parent or staff user profile",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "role": { "type": "string", "enum": ["parent", "admin"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "email", "role"]
+    },
+    "Student": {
+      "title": "Student",
+      "description": "Student / Child profile",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "name": { "type": "string" },
+        "grade": { "type": "string" },
+        "rollNo": { "type": "string" },
+        "annualFee": { "type": "number" },
+        "avatarInitials": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "name", "grade", "rollNo", "annualFee"]
+    },
+    "FeeSchedule": {
+      "title": "FeeSchedule",
+      "description": "Installment schedule for a student",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "studentId": { "type": "string" },
+        "userId": { "type": "string" },
+        "termNumber": { "type": "number" },
+        "termName": { "type": "string" },
+        "termMonth": { "type": "string" },
+        "dueDate": { "type": "string" },
+        "baseAmount": { "type": "number" },
+        "paidAmount": { "type": "number" },
+        "latePenaltyAmount": { "type": "number" },
+        "isOverdue": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["studentId", "userId", "termNumber", "termName", "dueDate", "baseAmount"]
+    },
+    "Payment": {
+      "title": "Payment",
+      "description": "Fee payment record and receipt",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "studentId": { "type": "string" },
+        "userId": { "type": "string" },
+        "scheduleId": { "type": "string" },
+        "termName": { "type": "string" },
+        "amount": { "type": "number" },
+        "paymentDate": { "type": "string" },
+        "paymentMode": { "type": "string" },
+        "transactionRef": { "type": "string" },
+        "status": { "type": "string", "enum": ["VERIFIED", "PENDING_VERIFICATION", "REJECTED"] },
+        "receiptNumber": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["studentId", "userId", "scheduleId", "amount", "paymentMode", "transactionRef", "status", "receiptNumber"]
+    },
+    "SavingsPlan": {
+      "title": "SavingsPlan",
+      "description": "Monthly savings goal and pot",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "studentId": { "type": "string" },
+        "userId": { "type": "string" },
+        "targetAmount": { "type": "number" },
+        "currentSaved": { "type": "number" },
+        "monthlyRecommendation": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["studentId", "userId", "targetAmount", "currentSaved", "monthlyRecommendation"]
+    },
+    "SupportRequest": {
+      "title": "SupportRequest",
+      "description": "Fee extension and hardship assistance request",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "studentId": { "type": "string" },
+        "userId": { "type": "string" },
+        "studentName": { "type": "string" },
+        "parentName": { "type": "string" },
+        "requestType": { "type": "string" },
+        "requestedExtensionDate": { "type": "string" },
+        "reason": { "type": "string" },
+        "status": { "type": "string", "enum": ["PENDING", "APPROVED", "REJECTED"] },
+        "adminRemarks": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["studentId", "userId", "requestType", "reason", "status"]
+    },
+    "Announcement": {
+      "title": "Announcement",
+      "description": "School wide announcement or fee notice",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "titleTamil": { "type": "string" },
+        "content": { "type": "string" },
+        "contentTamil": { "type": "string" },
+        "date": { "type": "string" },
+        "category": { "type": "string" },
+        "isImportant": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "content", "date", "category"]
+    },
+    "Scholarship": {
+      "title": "Scholarship",
+      "description": "Scholarship opportunity",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "titleTamil": { "type": "string" },
+        "provider": { "type": "string" },
+        "awardAmount": { "type": "number" },
+        "eligibility": { "type": "string" },
+        "eligibilityTamil": { "type": "string" },
+        "deadline": { "type": "string" },
+        "applicationStatus": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "provider", "awardAmount", "deadline"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "User profile document"
+    },
+    "/users/{userId}/students/{studentId}": {
+      "schema": { "$ref": "#/entities/Student" },
+      "description": "Student document under parent user"
+    },
+    "/users/{userId}/students/{studentId}/fee_schedules/{scheduleId}": {
+      "schema": { "$ref": "#/entities/FeeSchedule" },
+      "description": "Fee schedules for student"
+    },
+    "/users/{userId}/students/{studentId}/payments/{paymentId}": {
+      "schema": { "$ref": "#/entities/Payment" },
+      "description": "Payment records for student"
+    },
+    "/users/{userId}/students/{studentId}/savings_plans/{planId}": {
+      "schema": { "$ref": "#/entities/SavingsPlan" },
+      "description": "Savings plan for student"
+    },
+    "/users/{userId}/support_requests/{requestId}": {
+      "schema": { "$ref": "#/entities/SupportRequest" },
+      "description": "Fee hardship requests submitted by parent"
+    },
+    "/announcements/{announcementId}": {
+      "schema": { "$ref": "#/entities/Announcement" },
+      "description": "School wide announcements"
+    },
+    "/scholarships/{scholarshipId}": {
+      "schema": { "$ref": "#/entities/Scholarship" },
+      "description": "Public scholarship directory"
+    }
+  }
+}

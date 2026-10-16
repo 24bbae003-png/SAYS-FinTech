@@ -1,0 +1,111 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isValidUserProfile(data) {
+      return data.userId is string &&
+             data.email is string &&
+             data.role in ['parent', 'admin'];
+    }
+
+    function isValidStudent(data) {
+      return data.userId is string &&
+             data.name is string && data.name.size() > 0 &&
+             data.grade is string &&
+             data.rollNo is string &&
+             data.annualFee is number && data.annualFee >= 0;
+    }
+
+    function isValidFeeSchedule(data) {
+      return data.studentId is string &&
+             data.userId is string &&
+             data.termNumber is number &&
+             data.termName is string &&
+             data.dueDate is string &&
+             data.baseAmount is number && data.baseAmount >= 0;
+    }
+
+    function isValidPayment(data) {
+      return data.studentId is string &&
+             data.userId is string &&
+             data.scheduleId is string &&
+             data.amount is number && data.amount > 0 &&
+             data.paymentMode is string &&
+             data.transactionRef is string &&
+             data.status in ['VERIFIED', 'PENDING_VERIFICATION', 'REJECTED'] &&
+             data.receiptNumber is string;
+    }
+
+    function isValidSavingsPlan(data) {
+      return data.studentId is string &&
+             data.userId is string &&
+             data.targetAmount is number &&
+             data.currentSaved is number &&
+             data.monthlyRecommendation is number;
+    }
+
+    function isValidSupportRequest(data) {
+      return data.studentId is string &&
+             data.userId is string &&
+             data.requestType is string &&
+             data.reason is string &&
+             data.status in ['PENDING', 'APPROVED', 'REJECTED'];
+    }
+
+    // User profiles
+    match /users/{userId} {
+      allow read, write: if isOwner(userId) && isValidUserProfile(request.resource.data);
+
+      // Students
+      match /students/{studentId} {
+        allow read, delete: if isOwner(userId);
+        allow create, update: if isOwner(userId) && isValidStudent(request.resource.data);
+
+        // Fee Schedules
+        match /fee_schedules/{scheduleId} {
+          allow read, delete: if isOwner(userId);
+          allow create, update: if isOwner(userId) && isValidFeeSchedule(request.resource.data);
+        }
+
+        // Payments
+        match /payments/{paymentId} {
+          allow read, delete: if isOwner(userId);
+          allow create, update: if isOwner(userId) && isValidPayment(request.resource.data);
+        }
+
+        // Savings Plans
+        match /savings_plans/{planId} {
+          allow read, delete: if isOwner(userId);
+          allow create, update: if isOwner(userId) && isValidSavingsPlan(request.resource.data);
+        }
+      }
+
+      // Support Requests
+      match /support_requests/{requestId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidSupportRequest(request.resource.data);
+        allow update: if isAuthenticated();
+      }
+    }
+
+    // Announcements
+    match /announcements/{announcementId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
+    // Scholarships
+    match /scholarships/{scholarshipId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+  }
+}

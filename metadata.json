@@ -1,0 +1,6 @@
+{
+  "name": "SAYS FinTech",
+  "description": "Smart School Fee Management, Installment Planner, Due Date Reminders & Parent Budgeting App.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
